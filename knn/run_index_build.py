@@ -46,7 +46,7 @@ def main():
                         help='amount of data used for training.')
     parser.add_argument('--use-gpu', default=False, action='store_true',
                         help='if true, use gpu for training')
-    parser.add_argument('--workers', type=int, default=1, help='number of cpu')
+    parser.add_argument('--workers', type=int, default=6, help='number of cpu')
     parser.add_argument('--metric', type=str, default="l2", choices=["l2", "ip", "cosine"],
                         help='faiss index metric, l2 for L2 distance, ip for inner product, '
                              'cosine for cosine similarity')

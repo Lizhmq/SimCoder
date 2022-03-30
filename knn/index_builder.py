@@ -16,7 +16,7 @@ import numpy as np
 import math
 import logging
 
-from .data_store import DataStore
+from knn.data_store import DataStore
 
 
 LOGGING = logging.getLogger(__name__)
