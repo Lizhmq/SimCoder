@@ -15,7 +15,7 @@ import faiss
 import numpy as np
 import math
 import logging
-
+from tqdm import tqdm
 from knn.data_store import DataStore
 
 
@@ -133,22 +133,23 @@ class IndexBuilder:
             sample_keys = np.array(self.dstore.keys.astype(np.float32))
         else:
             np.random.seed(seed)
+            total_tokens = self.dstore.dstore_size
             max_num = max_num or self.dstore.dstore_size
             # random_sample = np.random.choice(np.arange(dstore_size),
             #                                  size=[min(max_num, dstore_size)],
             #                                  replace=False)
             # sample_keys = self.dstore.keys[random_sample].astype(np.float32).copy()  # [N, d]
             
-            sample_keys = np.zeros([min(max_num, dstore_size), hidden_size])
+            sample_keys = np.zeros([max_num, hidden_size])
             num_parts = 100
             offset = 0
             for p_idx in tqdm(range(num_parts), "Gathering training features"):
                 global_offset = total_tokens // num_parts * p_idx
-                part_size = train_features.shape[0] // num_parts if p_idx < num_parts-1 else train_features.shape[0] - train_features.shape[0] // num_parts * (num_parts-1)
-                train_features[offset: offset + part_size] = ds.keys[global_offset: global_offset + part_size]
+                part_size = sample_keys.shape[0] // num_parts if p_idx < num_parts-1 else sample_keys.shape[0] - sample_keys.shape[0] // num_parts * (num_parts-1)
+                sample_keys[offset: offset + part_size] = self.dstore.keys[global_offset: global_offset + part_size].astype(np.float32)
                 offset += part_size
 
-            sample_keys = np.array(self.dstore.keys[: max_num].astype(np.float32)) # [N, d]
+            # sample_keys = np.array(self.dstore.keys[: max_num].astype(np.float32)) # [N, d]
             if self.metric == "cosine":
                 norm = np.sqrt(np.sum(sample_keys ** 2, axis=-1, keepdims=True))
                 if (norm == 0).any():
