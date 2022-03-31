@@ -138,6 +138,16 @@ class IndexBuilder:
             #                                  size=[min(max_num, dstore_size)],
             #                                  replace=False)
             # sample_keys = self.dstore.keys[random_sample].astype(np.float32).copy()  # [N, d]
+            
+            sample_keys = np.zeros([min(max_num, dstore_size), hidden_size])
+            num_parts = 100
+            offset = 0
+            for p_idx in tqdm(range(num_parts), "Gathering training features"):
+                global_offset = total_tokens // num_parts * p_idx
+                part_size = train_features.shape[0] // num_parts if p_idx < num_parts-1 else train_features.shape[0] - train_features.shape[0] // num_parts * (num_parts-1)
+                train_features[offset: offset + part_size] = ds.keys[global_offset: global_offset + part_size]
+                offset += part_size
+
             sample_keys = np.array(self.dstore.keys[: max_num].astype(np.float32)) # [N, d]
             if self.metric == "cosine":
                 norm = np.sqrt(np.sum(sample_keys ** 2, axis=-1, keepdims=True))
