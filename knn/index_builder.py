@@ -140,7 +140,7 @@ class IndexBuilder:
             #                                  replace=False)
             # sample_keys = self.dstore.keys[random_sample].astype(np.float32).copy()  # [N, d]
             
-            sample_keys = np.zeros([max_num, hidden_size])
+            sample_keys = np.zeros([max_num, hidden_size]).astype(np.float32)
             num_parts = 100
             offset = 0
             for p_idx in tqdm(range(num_parts), "Gathering training features"):
