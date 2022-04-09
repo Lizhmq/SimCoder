@@ -18,8 +18,6 @@ def h52np(h5_file, np_path):
     print(f["representation"].shape)
     print(f["file_id"].shape)
     chunk_size = 100000
-    ["file_id"]
-    ["token_id"]
     key_file = os.path.join(np_path, "keys.npy")
     val_file = os.path.join(np_path, "vals.npy")
     keys = np.memmap(key_file,
@@ -48,5 +46,6 @@ def h52np(h5_file, np_path):
             sort_keys=True, indent=4, ensure_ascii=False)
     return
 
-# h52np("/home/zhanghz/mem-lm/data/py150k/codegpt_small_py_adaptedgpt2.representation.h5", "./data/train_dstore/")
+h52np("/home/zhanghz/mem-lm/data/py150k/codegpt_small_py_adaptedgpt2.representation_train.h5", "./data/train_dstore/")
+h52np("/home/zhanghz/mem-lm/data/py150k/codegpt_small_py_adaptedgpt2.representation_dev.h5", "./data/valid_dstore/")
 h52np("/home/zhanghz/mem-lm/data/py150k/codegpt_small_py_adaptedgpt2.representation_eval.h5", "./data/test_dstore/")
