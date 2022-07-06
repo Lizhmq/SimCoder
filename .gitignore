@@ -1,4 +1,6 @@
 data
+pretrained_model
 *__pycache__*
 nohup.out
 *.log
+parser/tree-sitter*
